@@ -1,0 +1,217 @@
+// ============================================
+// SISTEMA DE GRANJA INTELIGENTE COMPLETA
+// Ejemplo demostrando todas las características
+// ============================================
+
+INICIAR
+  // ========================================
+  // CONSTANTES GLOBALES
+  // ========================================
+  CONST umbral_humedad_min = 40
+  CONST umbral_humedad_critico = 25
+  CONST umbral_humedad_max = 85
+  CONST umbral_temp_max = 35
+  CONST umbral_temp_min = 10
+  CONST umbral_temp_optima = 22
+  CONST umbral_ph_min = 5.5
+  CONST umbral_ph_max = 7.5
+  CONST umbral_lux_min = 30
+  CONST umbral_co2_min = 400
+  CONST duracion_riego_corto = 15
+  CONST duracion_riego_medio = 25
+  CONST duracion_riego_largo = 40
+  CONST caudal_bajo = 5.5
+  CONST caudal_medio = 10.0
+  CONST caudal_alto = 15.5
+  CONST fertilizante_standard = 20
+
+  // ========================================
+  // LOTE 1: INVERNADERO PRINCIPAL
+  // ========================================
+  LOTE "Invernadero Principal" INICIAR
+      
+      // ====================================
+      // CULTIVO 1: TOMATES PREMIUM
+      // ====================================
+      CULTIVO "Tomates Premium" INICIAR
+          // Variables del sistema
+          VAR humedad_suelo: Humedad
+          VAR humedad_ambiente: Humedad
+          VAR temperatura_dia: Temperatura
+          VAR temperatura_noche: Temperatura
+          VAR ph_suelo: Ph
+          VAR luz_solar: Luz
+          VAR nivel_co2: Co2
+          
+          // Variables calculadas
+          VAR promedio_temp: Temperatura
+          VAR diferencia_temp: Temperatura
+          VAR factor_estres: Numero
+          VAR deficit_vapor: Numero
+          
+          // Dispositivos IP
+          DISPOSITIVO "Sensor_Hum_Suelo_T1" IP "192.168.1.10" PUERTO 8080
+          DISPOSITIVO "Sensor_Hum_Amb_T1" IP "192.168.1.11" PUERTO 8080
+          DISPOSITIVO "Sensor_Temp_Dia_T1" IP "192.168.1.12" PUERTO 8080
+          DISPOSITIVO "Sensor_Temp_Noche_T1" IP "192.168.1.13" PUERTO 8080
+          DISPOSITIVO "Sensor_Luz_T1" IP "192.168.1.14" PUERTO 8080
+          DISPOSITIVO "Sensor_CO2_T1" IP "192.168.1.15" PUERTO 8080
+          DISPOSITIVO "Actuador_Riego_T1" IP "192.168.1.20" PUERTO 9090
+          DISPOSITIVO "Actuador_Ventilacion_T1" IP "192.168.1.21" PUERTO 9090
+          
+          // Dispositivos Serial
+          DISPOSITIVO "Sensor_pH_T1" SERIAL "/dev/ttyUSB0"
+          
+          // Vinculaciones
+          VINCULAR humedad_suelo A "Sensor_Hum_Suelo_T1"
+          VINCULAR humedad_ambiente A "Sensor_Hum_Amb_T1"
+          VINCULAR temperatura_dia A "Sensor_Temp_Dia_T1"
+          VINCULAR temperatura_noche A "Sensor_Temp_Noche_T1"
+          VINCULAR ph_suelo A "Sensor_pH_T1"
+          VINCULAR luz_solar A "Sensor_Luz_T1"
+          VINCULAR nivel_co2 A "Sensor_CO2_T1"
+          
+          // Cálculos matemáticos complejos
+          CALCULAR promedio_temp = (temperatura_dia + temperatura_noche) / 2
+          CALCULAR diferencia_temp = temperatura_dia - temperatura_noche
+          CALCULAR factor_estres = ((100 - humedad_suelo) * 0.4) + ((promedio_temp - umbral_temp_optima) * 0.6)
+          CALCULAR deficit_vapor = (100 - humedad_ambiente) * (promedio_temp / 30)
+          
+          // Ejemplo de operador Y (AND)
+          CONDICION SI humedad_suelo < umbral_humedad_critico Y temperatura_dia > umbral_temp_max ENTONCES
+              RIEGO "Zona_A1" DURACION duracion_riego_largo
+              ACTIVAR "Actuador_Ventilacion_T1" DURACION 120
+              ENVIAR_ALERTA "🚨 EMERGENCIA: Condiciones críticas"
+          FIN_CONDICION
+          
+          // Ejemplo de operador O (OR)
+          CONDICION SI humedad_suelo < umbral_humedad_min O deficit_vapor > 50 ENTONCES
+              RIEGO "Zona_A1" DURACION duracion_riego_medio
+              ENVIAR_ALERTA "⚠️ Riego preventivo activado"
+          FIN_CONDICION
+          
+          // Ejemplo con ELSE simple
+          CONDICION SI promedio_temp > umbral_temp_max ENTONCES
+              ACTIVAR "Actuador_Ventilacion_T1" DURACION 60
+              ENVIAR_ALERTA "🌡️ Temperatura alta, ventilando"
+          SINO
+              ENVIAR_ALERTA "✅ Temperatura óptima"
+          FIN_CONDICION
+          
+          // Ejemplo con ELSE IF (SINO_SI)
+          CONDICION SI ph_suelo < umbral_ph_min ENTONCES
+              FERTILIZACION TIPO "Caliza" CANTIDAD fertilizante_standard
+              ENVIAR_ALERTA "📊 Corrigiendo pH bajo con caliza"
+          SINO_SI ph_suelo > umbral_ph_max ENTONCES
+              FERTILIZACION TIPO "Azufre" CANTIDAD 15
+              ENVIAR_ALERTA "📊 Corrigiendo pH alto con azufre"
+          SINO
+              ENVIAR_ALERTA "📊 pH óptimo"
+          FIN_CONDICION
+          
+          // Ejemplo de operador NO (NOT)
+          CONDICION SI NO (humedad_suelo > 80) ENTONCES
+              ENVIAR_ALERTA "💧 Humedad no excesiva"
+          FIN_CONDICION
+          
+          // Ejemplo de expresiones complejas con paréntesis
+          CONDICION SI (humedad_suelo < 40 Y temperatura_dia > 30) O (nivel_co2 < umbral_co2_min Y luz_solar < umbral_lux_min) ENTONCES
+              ACTIVAR "Actuador_Riego_T1" DURACION 30
+              ENVIAR_ALERTA "🌱 Condiciones complejas detectadas"
+          FIN_CONDICION
+          
+          // Ejemplo de RIEGO_AVANZADO con valores numéricos
+          CONDICION SI factor_estres > 60 ENTONCES
+              RIEGO_AVANZADO "Zona_Critica" CAUDAL 15.5 DURACION 45
+              ENVIAR_ALERTA "💦 Riego avanzado de emergencia"
+          FIN_CONDICION
+          
+          // Ejemplo de RIEGO_AVANZADO con constantes
+          CONDICION SI diferencia_temp > 15 ENTONCES
+              RIEGO_AVANZADO "Zona_Termica" CAUDAL caudal_medio DURACION duracion_riego_medio
+              ENVIAR_ALERTA "🌊 Riego térmico aplicado"
+          FIN_CONDICION
+          
+          // Condiciones anidadas
+          CONDICION SI temperatura_dia > umbral_temp_max ENTONCES
+              CONDICION SI humedad_suelo < 50 ENTONCES
+                  RIEGO "Zona_A1" DURACION 30
+                  ENVIAR_ALERTA "🔥 Doble emergencia: calor y sequía"
+              SINO
+                  ENVIAR_ALERTA "🌡️ Solo calor excesivo"
+              FIN_CONDICION
+          FIN_CONDICION
+          
+          // Monitoreo
+          MONITOREAR humedad_suelo CADA 1 HORAS
+          MONITOREAR promedio_temp CADA 2 HORAS
+          MONITOREAR ph_suelo CADA 6 HORAS
+          
+          // Reporte
+          REPORTE "Estado completo de Tomates Premium"
+      FINALIZAR
+      
+      // ====================================
+      // CULTIVO 2: LECHUGAS HIDROPÓNICAS
+      // ====================================
+      CULTIVO "Lechugas Hidropónicas" INICIAR
+          // Variables específicas para hidroponia
+          VAR conductividad: Numero
+          VAR oxigeno_disuelto: Numero
+          VAR temperatura_agua: Temperatura
+          VAR nivel_agua: Numero
+          
+          // Variables calculadas
+          VAR calidad_agua: Numero
+          
+          // Dispositivos para hidroponia
+          DISPOSITIVO "Sensor_Conductividad_L1" IP "192.168.1.30" PUERTO 8080
+          DISPOSITIVO "Sensor_O2_L1" IP "192.168.1.31" PUERTO 8080
+          DISPOSITIVO "Sensor_Temp_Agua_L1" IP "192.168.1.32" PUERTO 8080
+          DISPOSITIVO "Sensor_Nivel_L1" IP "192.168.1.33" PUERTO 8080
+          DISPOSITIVO "Bomba_Nutrientes_L1" IP "192.168.1.40" PUERTO 9090
+          DISPOSITIVO "Bomba_Agua_L1" IP "192.168.1.41" PUERTO 9090
+          DISPOSITIVO "Aireador_L1" IP "192.168.1.42" PUERTO 9090
+          
+          // Vinculaciones
+          VINCULAR conductividad A "Sensor_Conductividad_L1"
+          VINCULAR oxigeno_disuelto A "Sensor_O2_L1"
+          VINCULAR temperatura_agua A "Sensor_Temp_Agua_L1"
+          VINCULAR nivel_agua A "Sensor_Nivel_L1"
+          
+          // Cálculos específicos
+          CALCULAR calidad_agua = (oxigeno_disuelto * 10) + ((25 - temperatura_agua) * 2)
+          
+          // Control de nutrientes
+          CONDICION SI conductividad < 1200 Y calidad_agua > 50 ENTONCES
+              ACTIVAR "Bomba_Nutrientes_L1" DURACION 10
+              ENVIAR_ALERTA "🧪 Añadiendo nutrientes"
+          SINO_SI conductividad > 2000 ENTONCES
+              ACTIVAR "Bomba_Agua_L1" DURACION 10
+              ENVIAR_ALERTA "💧 Diluyendo solución"
+          FIN_CONDICION
+          
+          // Control de oxigenación con múltiples condiciones
+          CONDICION SI oxigeno_disuelto < 6 O temperatura_agua > 25 ENTONCES
+              ACTIVAR "Aireador_L1" DURACION 60
+              ENVIAR_ALERTA "🫧 Aumentando oxigenación"
+          FIN_CONDICION
+          
+          // Control de nivel de agua
+          CONDICION SI nivel_agua < 30 ENTONCES
+              ACTIVAR "Bomba_Agua_L1" DURACION 20
+              ENVIAR_ALERTA "📏 Rellenando tanque"
+          FIN_CONDICION
+          
+          MONITOREAR conductividad CADA 1 HORAS
+          MONITOREAR oxigeno_disuelto CADA 1 HORAS
+          
+          REPORTE "Sistema hidropónico"
+      FINALIZAR
+  FINALIZAR
+
+FINALIZAR
+
+// ============================================
+// FIN DEL PROGRAMA COMPLETO
+// ============================================

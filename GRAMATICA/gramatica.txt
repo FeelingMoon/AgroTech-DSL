@@ -1,0 +1,142 @@
+G = (
+    NT = {
+        <Programa>, <Lotes>, <Lote>, <Cultivos>, <Cultivo>, 
+        <Declaraciones>, <Declaracion>, <VarDef>, <ConstDef>, 
+        <DispositivoDef>, <SensorDef>, <ActuadorDef>, <Ubicacion>, 
+        <Vinculacion>, <Condicion>, <Accion>, <RiegoAvanzado>, 
+        <ActivarActuador>, <Fertilizacion>, <Monitoreo>, <Tarea>, 
+        <Reporte>, <Alerta>, <EnviarAlerta>, <Expresion>, <ExprLogica>, 
+        <Calcular>, <ExprMat>, <Comparador>
+    },
+    
+    T = {
+        INICIAR, FINALIZAR, CULTIVO, LOTE, VAR, CONST, DISPOSITIVO, 
+        IP, PUERTO, SERIAL, SENSOR, ACTUADOR, UBICAR_DISPOSITIVO, 
+        UBICAR_SENSOR, UBICAR_ACTUADOR, VINCULAR, CONDICION, 
+        FIN_CONDICION, RIEGO, RIEGO_AVANZADO, ACTIVAR, DURACION, 
+        CAUDAL, FERTILIZACION, TIPO, CANTIDAD, MONITOREAR, CADA, 
+        HORAS, TAREA, EJECUTAR, REPORTE, ALERTA, FIN_ALERTA, 
+        ENVIAR_ALERTA, SI, ENTONCES, SINO, SINO_SI, EN, A, 
+        DOS_PUNTOS, CALCULAR, ASIGNAR, MENOR, MAYOR, MENOR_IGUAL, 
+        MAYOR_IGUAL, IGUAL, Y, O, NO, MAS, MENOS, MULTIPLICAR, 
+        DIVIDIR, MODULO, PAREN_IZQ, PAREN_DER, NUMERO, IDENTIFICADOR, 
+        STRING, TIPO_DATO
+    },
+    
+    S = <Programa>,
+    
+    P = {
+        <Programa> ::= INICIAR <Declaraciones> <Lotes> FINALIZAR
+                    | INICIAR <Lotes> FINALIZAR
+        
+        <Lotes> ::= <Lote> <Lotes>
+                 | ε
+        
+        <Lote> ::= LOTE STRING INICIAR <Cultivos> FINALIZAR
+        
+        <Cultivos> ::= <Cultivo> <Cultivos>
+                    | ε
+        
+        <Cultivo> ::= CULTIVO STRING INICIAR <Declaraciones> FINALIZAR
+        
+        <Declaraciones> ::= <Declaracion> <Declaraciones>
+                         | ε
+        
+        <Declaracion> ::= <VarDef>
+                       | <ConstDef>
+                       | <DispositivoDef>
+                       | <SensorDef>
+                       | <ActuadorDef>
+                       | <Ubicacion>
+                       | <Vinculacion>
+                       | <Condicion>
+                       | <Accion>
+                       | <RiegoAvanzado>
+                       | <ActivarActuador>
+                       | <Fertilizacion>
+                       | <Monitoreo>
+                       | <Tarea>
+                       | <Reporte>
+                       | <Alerta>
+                       | <EnviarAlerta>
+                       | <Calcular>
+        
+        <VarDef> ::= VAR IDENTIFICADOR DOS_PUNTOS TIPO_DATO
+                  | VAR IDENTIFICADOR DOS_PUNTOS IDENTIFICADOR
+        
+        <ConstDef> ::= CONST IDENTIFICADOR ASIGNAR NUMERO
+                    | CONST IDENTIFICADOR ASIGNAR IDENTIFICADOR
+        
+        <DispositivoDef> ::= DISPOSITIVO STRING IP STRING PUERTO NUMERO
+                          | DISPOSITIVO STRING SERIAL STRING
+                          | DISPOSITIVO STRING
+        
+        <SensorDef> ::= SENSOR TIPO_DATO STRING
+                     | SENSOR IDENTIFICADOR STRING
+        
+        <ActuadorDef> ::= ACTUADOR TIPO_DATO STRING
+                       | ACTUADOR IDENTIFICADOR STRING
+        
+        <Ubicacion> ::= UBICAR_DISPOSITIVO STRING EN STRING
+                     | UBICAR_SENSOR STRING EN STRING
+                     | UBICAR_ACTUADOR STRING EN STRING
+        
+        <Vinculacion> ::= VINCULAR IDENTIFICADOR A STRING
+        
+        <Condicion> ::= CONDICION SI <ExprLogica> ENTONCES <Declaraciones> FIN_CONDICION
+                     | CONDICION SI <ExprLogica> ENTONCES <Declaraciones> SINO <Declaraciones> FIN_CONDICION
+                     | CONDICION SI <ExprLogica> ENTONCES <Declaraciones> SINO_SI <ExprLogica> ENTONCES <Declaraciones> FIN_CONDICION
+                     | CONDICION SI <ExprLogica> ENTONCES <Declaraciones> SINO_SI <ExprLogica> ENTONCES <Declaraciones> SINO <Declaraciones> FIN_CONDICION
+        
+        <Accion> ::= RIEGO STRING DURACION NUMERO
+                  | RIEGO STRING DURACION IDENTIFICADOR
+        
+        <RiegoAvanzado> ::= RIEGO_AVANZADO STRING CAUDAL NUMERO DURACION NUMERO
+                         | RIEGO_AVANZADO STRING CAUDAL IDENTIFICADOR DURACION IDENTIFICADOR
+                         | RIEGO_AVANZADO STRING CAUDAL NUMERO DURACION IDENTIFICADOR
+                         | RIEGO_AVANZADO STRING CAUDAL IDENTIFICADOR DURACION NUMERO
+        
+        <ActivarActuador> ::= ACTIVAR STRING DURACION NUMERO
+                           | ACTIVAR STRING DURACION IDENTIFICADOR
+        
+        <Fertilizacion> ::= FERTILIZACION TIPO STRING CANTIDAD NUMERO
+                         | FERTILIZACION TIPO STRING CANTIDAD IDENTIFICADOR
+        
+        <Monitoreo> ::= MONITOREAR IDENTIFICADOR CADA NUMERO HORAS
+        
+        <Tarea> ::= TAREA EJECUTAR STRING
+        
+        <Reporte> ::= REPORTE STRING
+        
+        <Alerta> ::= ALERTA SI <Expresion> ENTONCES <EnviarAlerta> FIN_ALERTA
+        
+        <EnviarAlerta> ::= ENVIAR_ALERTA STRING
+        
+        <Expresion> ::= IDENTIFICADOR <Comparador> NUMERO
+                     | IDENTIFICADOR <Comparador> IDENTIFICADOR
+                     | IDENTIFICADOR <Comparador> STRING
+        
+        <ExprLogica> ::= <Expresion>
+                      | <ExprLogica> Y <ExprLogica>
+                      | <ExprLogica> O <ExprLogica>
+                      | NO <ExprLogica>
+                      | PAREN_IZQ <ExprLogica> PAREN_DER
+        
+        <Calcular> ::= CALCULAR IDENTIFICADOR ASIGNAR <ExprMat>
+        
+        <ExprMat> ::= <ExprMat> MAS <ExprMat>
+                   | <ExprMat> MENOS <ExprMat>
+                   | <ExprMat> MULTIPLICAR <ExprMat>
+                   | <ExprMat> DIVIDIR <ExprMat>
+                   | <ExprMat> MODULO <ExprMat>
+                   | PAREN_IZQ <ExprMat> PAREN_DER
+                   | NUMERO
+                   | IDENTIFICADOR
+        
+        <Comparador> ::= MENOR
+                      | MAYOR
+                      | MENOR_IGUAL
+                      | MAYOR_IGUAL
+                      | IGUAL
+    }
+)

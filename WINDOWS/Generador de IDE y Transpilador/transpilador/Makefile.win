@@ -1,0 +1,107 @@
+# Makefile para Windows (MinGW/MSYS2)
+# Transpilador DSL Agricultura V2.0
+
+# Compiladores y herramientas
+CC = g++
+CFLAGS = -std=c++11 -Wall
+FLEX = flex
+BISON = bison
+
+# Archivos fuente
+LEXER = lexer.l
+PARSER = parser.y
+
+# Archivos generados
+LEX_OUTPUT = lex.yy.c
+PARSER_OUTPUT = parser.tab.c
+PARSER_HEADER = parser.tab.h
+
+# Ejecutable (con extensión .exe para Windows)
+TARGET = transpilador.exe
+
+# Archivos objeto
+OBJECTS = $(LEX_OUTPUT) $(PARSER_OUTPUT)
+
+# Regla principal
+all: $(TARGET)
+	@echo.
+	@echo ========================================
+	@echo   Transpilador compilado exitosamente
+	@echo ========================================
+	@echo   Uso: transpilador.exe archivo.agro
+	@echo.
+
+# Compilar el transpilador
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
+
+# Generar lexer
+$(LEX_OUTPUT): $(LEXER)
+	$(FLEX) $(LEXER)
+	@echo [ OK ] Lexer generado
+
+# Generar parser
+$(PARSER_OUTPUT) $(PARSER_HEADER): $(PARSER)
+	$(BISON) -d $(PARSER)
+	@echo [ OK ] Parser generado
+
+# Probar con el ejemplo IoT
+test: $(TARGET)
+	@echo.
+	@echo ========================================
+	@echo   Probando con ejemplo_iot.agro
+	@echo ========================================
+	@echo.
+	.\$(TARGET) ejemplo_iot.agro
+	@echo.
+	@echo ========================================
+	@echo   Compilando C++ generado
+	@echo ========================================
+	@echo.
+	$(CC) salida.cpp -o simulador.exe
+	@echo.
+	@echo [ OK ] Todo compilado. Ejecuta: simulador.exe
+
+# Ejecutar simulador
+run: test
+	@echo.
+	@echo ========================================
+	@echo   Ejecutando Simulacion
+	@echo ========================================
+	@echo.
+	.\simulador.exe
+
+# Limpiar archivos generados
+clean:
+	-del /Q $(LEX_OUTPUT) $(PARSER_OUTPUT) $(PARSER_HEADER) 2>nul
+	-del /Q $(TARGET) simulador.exe salida.cpp 2>nul
+	-del /Q *.o 2>nul
+	@echo [ OK ] Archivos limpiados
+
+# Limpiar todo incluyendo outputs de compilación
+distclean: clean
+	-del /Q *.output 2>nul
+	@echo [ OK ] Limpieza completa
+
+# Información del proyecto
+info:
+	@echo ========================================
+	@echo   DSL Agricultura - Transpilador IoT
+	@echo   Version 2.0 - Windows Edition
+	@echo ========================================
+	@echo.
+	@echo Archivos principales:
+	@echo   - lexer.l      : Analizador lexico
+	@echo   - parser.y     : Analizador sintactico
+	@echo   - ast.h        : Definiciones del AST
+	@echo   - codegen.h    : Generador de codigo C++
+	@echo.
+	@echo Comandos disponibles:
+	@echo   make -f Makefile.win           : Compilar transpilador
+	@echo   make -f Makefile.win test      : Probar con ejemplo_iot.agro
+	@echo   make -f Makefile.win run       : Ejecutar simulacion completa
+	@echo   make -f Makefile.win clean     : Limpiar archivos generados
+	@echo   make -f Makefile.win info      : Mostrar esta informacion
+	@echo.
+
+.PHONY: all test run clean distclean info
