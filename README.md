@@ -1,17 +1,17 @@
-# 🌾 DSL Agricultura - Sistema de Automatización Agrícola
+# 🌾 AgroTech DSL - Lenguaje de Automatización Agrícola
 
 ## Versión 3.1 (Edición Multiplataforma)
 
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-blue)
 ![Qt](https://img.shields.io/badge/Qt-6.x-green)
 ![C++](https://img.shields.io/badge/C%2B%2B-17-orange)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![License](https://img.shields.io/badge/license-GNU%20GPL-lightgrey)
 
 ---
 
 ## 🎯 Descripción
 
-**DSL Agricultura** es un lenguaje de dominio específico (DSL) diseñado para programar sistemas de automatización agrícola de forma simple e intuitiva. Incluye:
+**AgroTech DSL** es un lenguaje de dominio específico (DSL) diseñado para programar sistemas de automatización agrícola de forma simple e intuitiva. Incluye:
 
 - 🔧 **Transpilador** - Convierte código DSL a C++ optimizado.
 - 🖥️ **IDE Gráfico** - Editor con resaltado de sintaxis, validación en tiempo real y múltiples pestañas.
@@ -111,37 +111,23 @@ Agricultura-DSL/
 │       ├── highlighter.cpp/.h # Resaltado de sintaxis
 │       ├── IDE-Agricultura.pro# Proyecto Qt
 │       └── build/             # Archivos compilados (generados)
-├── WINDOWS/                   # Fuentes y binarios para Windows
-│   ├── Generador de IDE y Transpilador/  # Fuentes para generar manualmente
-│   │   ├── transpilador/      # Similar a LINUX/transpilador, con .bat
-│   │   │   ├── lexer.l
-│   │   │   ├── parser.y
-│   │   │   ├── ast.h
-│   │   │   ├── codegen.h
-│   │   │   ├── Makefile.win   # Makefile para Windows
-│   │   │   ├── compile.bat    # Compilar transpilador
-│   │   │   ├── run_lexer.bat  # Validar léxico
-│   │   │   ├── run_parser.bat # Validar sintaxis
-│   │   │   ├── run_codegen.bat# Generar código
-│   │   │   └── run_simulator.bat # Ejecutar simulación
-│   │   └── IDE/               # Similar a LINUX/IDE-Agricultura, con .bat
-│   │       ├── main.cpp
-│   │       ├── mainwindow.cpp/.h
-│   │       ├── codeeditor.cpp/.h
-│   │       ├── highlighter.cpp/.h
-│   │       ├── IDE-Agricultura.pro
-│   │       └── compile_ide.bat# Compilar IDE
-│   └── Listo para usar/       # Binarios precompilados para uso inmediato
-│       ├── IDE-Agricultura.exe# Ejecutable del IDE
-│       ├── transpilador.exe   # Ejecutable del transpilador
-│       ├── Iniciar-IDE.bat    # Script para lanzar el IDE
-│       └── bin/               # Dependencias y salidas
-└── docs/                      # Documentación adicional
-    ├── INSTALACION_WINDOWS.md # Guía detallada para Windows
-    ├── INSTALACION_LINUX.md   # Guía detallada para Linux (integrada de INSTALACION.md)
-    ├── GUIA_USUARIO.md        # Manual del lenguaje
-    ├── EJEMPLOS.md            # Más ejemplos
-    └── API_REFERENCE.md       # Referencia API
+└── WINDOWS/                   # Fuentes y binarios para Windows
+    ├── Generador de IDE y Transpilador/  # Fuentes para generar manualmente
+    │   ├── transpilador/      # Similar a LINUX/transpilador, con .bat
+    │   │   ├── lexer.l
+    │   │   ├── parser.y
+    │   │   ├── ast.h
+    │   │   ├── codegen.h
+    │   │   └── Makefile.win   # Makefile para Windows
+    │   └── IDE/               # Similar a LINUX/IDE-Agricultura, con .bat
+    │       ├── main.cpp
+    │       ├── mainwindow.cpp/.h
+    │       ├── codeeditor.cpp/.h
+    │       ├── highlighter.cpp/.h
+    │       ├── IDE-Agricultura.pro
+    │       └── compile_ide.bat# Compilar IDE
+    └── Listo para usar/       # Binarios precompilados para uso inmediato
+        └── Iniciar-IDE.bat    # Script para lanzar el IDE
 ```
 
 ### Instalación en Linux (Ubuntu)
@@ -150,7 +136,7 @@ Agricultura-DSL/
 3. Compilar IDE: `cd LINUX/IDE-Agricultura && qmake IDE-Agricultura.pro && make`.
 4. Ejecutar: `cd LINUX/IDE-Agricultura/bin && ./IDE-Agricultura`.
 
-### Instalación en Windows
+### Instalación en Windows (Revisar antes documento de instrucciones incluido)
 - **Opción 1: Generar manualmente** (usando carpeta "Generador de IDE y Transpilador"):
   1. Instalar MSYS2: Descargar de https://www.msys2.org/. Ejecutar: `pacman -Syu && pacman -S mingw-w64-x86_64-gcc flex bison make`.
   2. Instalar Qt: Descargar de https://www.qt.io/download (Qt 6.x con MinGW).
@@ -162,8 +148,6 @@ Agricultura-DSL/
   1. Ir a `WINDOWS/Listo para usar`.
   2. Ejecutar `Iniciar-IDE.bat` o directamente `IDE-Agricultura.exe`.
   3. Todo está precompilado; no necesitas instalar herramientas adicionales.
-
-📖 **Guías detalladas:** [`docs/INSTALACION_WINDOWS.md`](docs/INSTALACION_WINDOWS.md) y [`docs/INSTALACION_LINUX.md`](docs/INSTALACION_LINUX.md).
 
 ---
 
@@ -328,7 +312,6 @@ REPORTE "título"
 ENVIAR_ALERTA "mensaje"
 CALCULAR variable = expresión
 VINCULAR variable A "dispositivo"
-TAREA nombre EJECUTAR "hora" ... FIN_TAREA
 ```
 
 #### Tipos de Datos:
@@ -490,15 +473,7 @@ REPORTE "Estado completo del invernadero"
 REPORTE "Análisis diario de cultivo"
 ```
 
-#### 16. Tareas Programadas
-```
-TAREA fertilizar_matutina
-    EJECUTAR "07:00"
-    FERTILIZACION EN campo_sur TIPO "NPK" CANTIDAD 50
-FIN_TAREA
-```
-
-#### 17. Control de Riego Básico
+#### 16. Control de Riego Básico
 ```dsl
 INICIAR PROGRAMA
     LOTE campo_norte
@@ -514,7 +489,7 @@ INICIAR PROGRAMA
 FINALIZAR PROGRAMA
 ```
 
-#### 18. Sistema IoT con Alertas
+#### 17. Sistema IoT con Alertas
 ```dsl
 INICIAR PROGRAMA
     LOTE invernadero_a
@@ -537,7 +512,7 @@ INICIAR PROGRAMA
 FINALIZAR PROGRAMA
 ```
 
-#### 19. Programa Completo de Ejemplo
+#### 18. Programa Completo de Ejemplo
 ```
 INICIAR
   // ========== CONSTANTES ==========
@@ -615,7 +590,7 @@ INICIAR
 FINALIZAR
 ```
 
-Ver más ejemplos en `SCRIPT(S) - EJEMPLO/` y `docs/EJEMPLOS.md`.
+Ver más ejemplos en `SCRIPT(S) - EJEMPLO/`.
 
 ### 🎨 Visualización de Salida
 
@@ -664,64 +639,6 @@ Ver más ejemplos en `SCRIPT(S) - EJEMPLO/` y `docs/EJEMPLOS.md`.
 
 ---
 
-## 🛠️ Scripts Disponibles
-
-### Transpilador (Linux)
-| Script | Descripción |
-|--------|-------------|
-| `run_lexer.sh` | Valida análisis léxico |
-| `run_parser.sh` | Valida análisis sintáctico |
-| `run_codegen.sh` | Genera y compila código C++ |
-| `run_simulator.sh` | Ejecuta el simulador |
-
-### Transpilador (Windows)
-| Script | Descripción |
-|--------|-------------|
-| `compile.bat` | Compila el transpilador completo |
-| `run_lexer.bat` | Valida análisis léxico |
-| `run_parser.bat` | Valida análisis sintáctico |
-| `run_codegen.bat` | Genera y compila código C++ |
-| `run_simulator.bat` | Ejecuta el simulador |
-
-### IDE (Windows)
-| Script | Descripción |
-|--------|-------------|
-| `compile_ide.bat` | Compila el IDE con Qt |
-
----
-
-## 🔧 Compilación Manual
-
-### Transpilador (Linux)
-```bash
-cd LINUX/transpilador
-flex lexer.l
-bison -d parser.y
-g++ -std=c++11 -o transpilador lex.yy.c parser.tab.c
-```
-
-### Transpilador (Windows)
-```cmd
-cd WINDOWS/Generador de IDE y Transpilador/transpilador
-flex lexer.l
-bison -d parser.y
-g++ -std=c++11 -o transpilador.exe lex.yy.c parser.tab.c
-```
-
-### IDE (Linux)
-```bash
-cd LINUX/IDE-Agricultura
-qmake6 IDE-Agricultura.pro
-make
-```
-
-### IDE (Windows)
-```cmd
-cd WINDOWS/Generador de IDE y Transpilador/IDE
-qmake IDE-Agricultura.pro
-mingw32-make
-```
-
 ---
 
 ## 🐛 Solución de Problemas
@@ -748,17 +665,6 @@ mingw32-make
 **Solución:** Verifica `qmake6 --version` e instala `qt6-base-dev`.
 
 📖 **Más soluciones:** [`docs/INSTALACION_WINDOWS.md#solución-de-problemas`](docs/INSTALACION_WINDOWS.md) y [`docs/INSTALACION_LINUX.md`](docs/INSTALACION_LINUX.md).
-
----
-
-## 📚 Documentación
-
-- [Guía de Instalación Windows](docs/INSTALACION_WINDOWS.md)
-- [Guía de Instalación Linux](docs/INSTALACION_LINUX.md)
-- [Manual de Usuario del Lenguaje](docs/GUIA_USUARIO.md)
-- [Ejemplos y Tutoriales](docs/EJEMPLOS.md)
-- [Referencia del API](docs/API_REFERENCE.md)
-- [Gramática del Lenguaje](GRAMATICA/gramatica.txt)
 
 ---
 
@@ -887,13 +793,14 @@ Las contribuciones son bienvenidas:
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia GNU. Ver archivo `LICENSE` para más detalles.
 
 ---
 
 ## 👥 Autores
 
-- **Tu Nombre** - *Trabajo inicial* - [TuGitHub](https://github.com/tuusuario)
+- **Johan Felipe Silva Cavieles** - *Desarrollo de IDE y Parser* - [FeelingMoon](https://github.com/FeelingMoon)
+- **Juan Esteban Oyola Galindo** - *Desarrollador del Lexer y Tester* - [JuanOyolaGalindo](https://github.com/JuanOyolaGalindo)
 
 ---
 
@@ -927,7 +834,7 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 - ✨ Scripts .bat.
 - ✨ Soporte IoT.
 
-### v1.0.0 (2024)
+### v1.0.0 (2025-09-15)
 - 🎉 Versión inicial para Linux.
 
 ---
