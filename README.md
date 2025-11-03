@@ -815,9 +815,7 @@ Este proyecto está bajo la Licencia GNU. Ver archivo `LICENSE` para más detall
 
 ## 📧 Contacto
 
-- **Email:** contacto@ejemplo.com
-- **GitHub:** https://github.com/tuusuario/agricultura-dsl
-- **Issues:** https://github.com/tuusuario/agricultura-dsl/issues
+- **Issues:** https://github.com/FeelingMoon/AgroTech-DSL/issues
 
 ---
 
